@@ -16,7 +16,9 @@ Public Function request(url As String, Optional postParameters As String = "", O
     End If
     
     Set xml = CreateObject("MSXML2.XMLHTTP")
-    xml.Open requestType, url, False
+    xml.Open requestType, url, False\
+    xml.setRequestHeader "Content-Type", "application/json"
+    xml.setRequestHeader "Accept", "application/json"
     If postParameters <> "" Then
         xml.send postParameters
     Else
@@ -45,7 +47,11 @@ Private Sub SetJson()
     Set pResponseJson = pScriptControl.Run("getObject")
 End Sub
 Public Function setJsonRoot(rootPath As String)
-    pScriptControl.ExecuteStatement "rootObj = obj." & rootPath
+    If rootPath = "" Then
+        pScriptControl.ExecuteStatement "rootObj = obj"
+    Else
+        pScriptControl.ExecuteStatement "rootObj = obj." & rootPath
+    End If
     Set setJsonRoot = pScriptControl.Run("getRootObject")
 End Function
 Public Function getJsonObjectCount()
